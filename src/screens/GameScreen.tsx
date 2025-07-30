@@ -232,8 +232,8 @@ export function GameScreen({ navigation }: GameScreenProps) {
         </PanGestureHandler>
       </View>
 
-      {/* CHANGED: Cleaner bottom instructions */}
-      <View className="flex-row justify-between px-16 pb-20">
+      {/* CHANGED: Cleaner bottom instructions with more spacing */}
+      <View className="flex-row justify-between px-16 pb-20 pt-12">
         <Pressable 
           onPress={() => {
             // Trigger the same animation as swiping left
@@ -244,7 +244,7 @@ export function GameScreen({ navigation }: GameScreenProps) {
           }}
           className="items-center"
         >
-          <View className="w-16 h-16 bg-slate-800 border-2 border-red-500 rounded-full items-center justify-center mb-7">
+          <View className="w-16 h-16 bg-slate-800 border-2 border-red-500 rounded-full items-center justify-center mb-3">
             <Ionicons name="arrow-back" size={24} color="#EF4444" />
           </View>
           <Text className="text-red-500 font-bold text-sm">FALSE</Text>
@@ -260,7 +260,7 @@ export function GameScreen({ navigation }: GameScreenProps) {
           }}
           className="items-center"
         >
-          <View className="w-16 h-16 bg-slate-800 border-2 border-green-500 rounded-full items-center justify-center mb-7">
+          <View className="w-16 h-16 bg-slate-800 border-2 border-green-500 rounded-full items-center justify-center mb-3">
             <Ionicons name="arrow-forward" size={24} color="#10B981" />
           </View>
           <Text className="text-green-500 font-bold text-sm">TRUE</Text>
