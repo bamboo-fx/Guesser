@@ -72,7 +72,7 @@ const topics: {
   },
 ];
 
-export function TopicSelecxtionScreen({ navigation }: TopicSelectionScreenProps) {
+export function TopicSelectionScreen({ navigation }: TopicSelectionScreenProps) {
   const setTopic = useGameStore((state) => state.setTopic);
   
   // Animation values
