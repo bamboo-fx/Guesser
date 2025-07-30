@@ -49,6 +49,7 @@ export function GameScreen({ navigation }: GameScreenProps) {
   useEffect(() => {
     if (!gameActive) {
       startGame();
+      resetCard(); // Reset card position when game starts
     }
   }, []);
 

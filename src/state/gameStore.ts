@@ -34,9 +34,11 @@ export const useGameStore = create<GameStore>()(
       
       setTopic: (topic: Topic) => {
         const facts = getFactsForTopic(topic);
+        // Shuffle the facts array to randomize question order
+        const shuffledFacts = [...facts].sort(() => Math.random() - 0.5);
         set({ 
           currentTopic: topic,
-          facts,
+          facts: shuffledFacts,
           currentFactIndex: 0,
           score: 0,
           totalQuestions: 0,
@@ -93,7 +95,14 @@ export const useGameStore = create<GameStore>()(
       },
 
       resetGame: () => {
-        set(initialState);
+        const state = get();
+        // Keep the current topic and facts, but reset everything else
+        set({
+          ...initialState,
+          currentTopic: state.currentTopic,
+          facts: state.facts,
+          currentFactIndex: 0, // Explicitly reset to first question
+        });
       },
 
       hideFeedback: () => {
