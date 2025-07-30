@@ -25,6 +25,7 @@ const initialState: GameState = {
   facts: [],
   showFeedback: false,
   lastAnswerCorrect: null,
+  answeredQuestions: [],
 };
 
 export const useGameStore = create<GameStore>()(
@@ -67,11 +68,18 @@ export const useGameStore = create<GameStore>()(
         const currentFact = state.facts[state.currentFactIndex];
         const isCorrect = userAnswer === currentFact.isTrue;
         
+        const answeredQuestion = {
+          fact: currentFact,
+          userAnswer,
+          isCorrect,
+        };
+        
         set({
           score: isCorrect ? state.score + 1 : state.score,
           totalQuestions: state.totalQuestions + 1,
           showFeedback: true,
           lastAnswerCorrect: isCorrect,
+          answeredQuestions: [...state.answeredQuestions, answeredQuestion],
         });
       },
 
@@ -96,11 +104,13 @@ export const useGameStore = create<GameStore>()(
 
       resetGame: () => {
         const state = get();
-        // Keep the current topic and facts, but reset everything else
+        // Get fresh facts for the current topic and reshuffle them
+        const freshFacts = getFactsForTopic(state.currentTopic!);
+        const shuffledFacts = [...freshFacts].sort(() => Math.random() - 0.5);
         set({
           ...initialState,
           currentTopic: state.currentTopic,
-          facts: state.facts,
+          facts: shuffledFacts,
           currentFactIndex: 0, // Explicitly reset to first question
         });
       },

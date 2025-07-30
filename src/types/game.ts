@@ -7,6 +7,12 @@ export interface Fact {
   topic: Topic;
 }
 
+export interface AnsweredQuestion {
+  fact: Fact;
+  userAnswer: boolean;
+  isCorrect: boolean;
+}
+
 export interface GameState {
   currentTopic: Topic | null;
   currentFactIndex: number;
@@ -17,4 +23,5 @@ export interface GameState {
   facts: Fact[];
   showFeedback: boolean;
   lastAnswerCorrect: boolean | null;
+  answeredQuestions: AnsweredQuestion[];
 }

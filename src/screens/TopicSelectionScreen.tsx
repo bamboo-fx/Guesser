@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
   useSharedValue,
@@ -122,7 +122,7 @@ export function TopicSelectionScreen({ navigation }: TopicSelectionScreenProps) 
   }));
 
   return (
-    <View className="flex-1 bg-slate-900 px-6">
+    <ScrollView className="flex-1 bg-slate-900 px-6" showsVerticalScrollIndicator={false}>
       {/* Animated header */}
       <Animated.View style={[titleStyle]} className="mt-16 mb-12">
                  <Text className="text-5xl font-black text-center text-white mb-4 shadow-2xl mt-4">
@@ -152,7 +152,7 @@ export function TopicSelectionScreen({ navigation }: TopicSelectionScreenProps) 
       </View>
 
 
-    </View>
+    </ScrollView>
   );
 }
 

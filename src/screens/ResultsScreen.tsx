@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
   useSharedValue,
@@ -21,7 +21,7 @@ interface ResultsScreenProps {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function ResultsScreen({ navigation }: ResultsScreenProps) {
-  const { score, totalQuestions, currentTopic, resetGame } = useGameStore();
+  const { score, totalQuestions, currentTopic, resetGame, answeredQuestions } = useGameStore();
 
   const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
 
@@ -135,8 +135,8 @@ export function ResultsScreen({ navigation }: ResultsScreenProps) {
   }));
 
   return (
-    <View className="flex-1 bg-slate-900 items-center justify-center px-6">
-      <Animated.View style={[cardStyle]} className="w-full max-w-sm mt-8">
+    <ScrollView className="flex-1 bg-slate-900 px-6" showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Animated.View style={[cardStyle]} className="w-full max-w-sm mt-16">
         {/* Main Results Card */}
         <View className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 p-1 rounded-3xl mb-8">
           <Animated.View 
@@ -226,6 +226,16 @@ export function ResultsScreen({ navigation }: ResultsScreenProps) {
             primary={true}
           />
 
+          {/* Review Answers Button */}
+          <AnimatedButton
+            onPress={() => navigation.navigate('ReviewAnswers')}
+            gradient={['#F59E0B', '#D97706']}
+            shadowColor="#F59E0B"
+            icon="list-outline"
+            text="REVIEW ANSWERS"
+            primary={false}
+          />
+
           {/* New Topic Button */}
           <AnimatedButton
             onPress={() => navigation.navigate('TopicSelection')}
@@ -237,7 +247,7 @@ export function ResultsScreen({ navigation }: ResultsScreenProps) {
           />
         </Animated.View>
       </Animated.View>
-    </View>
+    </ScrollView>
   );
 }
 

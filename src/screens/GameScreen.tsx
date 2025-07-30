@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, Pressable, Dimensions } from 'react-native';
+import { View, Text, Pressable, Dimensions, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, {
@@ -175,7 +175,7 @@ export function GameScreen({ navigation }: GameScreenProps) {
   const progress = (currentFactIndex / facts.length) * 100;
 
   return (
-    <View className="flex-1 bg-slate-900">
+    <ScrollView className="flex-1 bg-slate-900" showsVerticalScrollIndicator={false}>
       {/* CHANGED: Dark header with better styling */}
       <View className="flex-row justify-between items-center px-6 pt-14 pb-6 bg-slate-800/50">
         <Pressable 
@@ -233,20 +233,38 @@ export function GameScreen({ navigation }: GameScreenProps) {
       </View>
 
       {/* CHANGED: Cleaner bottom instructions */}
-      <View className="flex-row justify-between px-16 pb-12">
-        <View className="items-center">
-          <View className="w-16 h-16 bg-slate-800 border-2 border-red-500 rounded-full items-center justify-center mb-3">
+      <View className="flex-row justify-between px-16 pb-20">
+        <Pressable 
+          onPress={() => {
+            // Trigger the same animation as swiping left
+            translateX.value = withTiming(-SCREEN_WIDTH, { duration: 300 });
+            opacity.value = withTiming(0, { duration: 300 });
+            rotation.value = withTiming(-30, { duration: 300 });
+            handleAnswer(false);
+          }}
+          className="items-center"
+        >
+          <View className="w-16 h-16 bg-slate-800 border-2 border-red-500 rounded-full items-center justify-center mb-7">
             <Ionicons name="arrow-back" size={24} color="#EF4444" />
           </View>
           <Text className="text-red-500 font-bold text-sm">FALSE</Text>
-        </View>
+        </Pressable>
         
-        <View className="items-center">
-          <View className="w-16 h-16 bg-slate-800 border-2 border-green-500 rounded-full items-center justify-center mb-3">
+        <Pressable 
+          onPress={() => {
+            // Trigger the same animation as swiping right
+            translateX.value = withTiming(SCREEN_WIDTH, { duration: 300 });
+            opacity.value = withTiming(0, { duration: 300 });
+            rotation.value = withTiming(30, { duration: 300 });
+            handleAnswer(true);
+          }}
+          className="items-center"
+        >
+          <View className="w-16 h-16 bg-slate-800 border-2 border-green-500 rounded-full items-center justify-center mb-7">
             <Ionicons name="arrow-forward" size={24} color="#10B981" />
           </View>
           <Text className="text-green-500 font-bold text-sm">TRUE</Text>
-        </View>
+        </Pressable>
       </View>
 
       {/* CHANGED: More dramatic feedback overlay */}
@@ -268,6 +286,6 @@ export function GameScreen({ navigation }: GameScreenProps) {
           </Text>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 }

@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TopicSelectionScreen } from './src/screens/TopicSelectionScreen';
 import { GameScreen } from './src/screens/GameScreen';
 import { ResultsScreen } from './src/screens/ResultsScreen';
+import { ReviewAnswersScreen } from './src/screens/ReviewAnswersScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,10 @@ export default function App() {
             <Stack.Screen 
               name="Results" 
               component={ResultsScreen} 
+            />
+            <Stack.Screen 
+              name="ReviewAnswers" 
+              component={ReviewAnswersScreen} 
             />
           </Stack.Navigator>
         </NavigationContainer>
