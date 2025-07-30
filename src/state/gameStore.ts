@@ -85,6 +85,9 @@ export const useGameStore = create<GameStore>()(
 
       nextFact: () => {
         const state = get();
+        // Ensure we don't go out of bounds
+        if (state.facts.length === 0) return;
+        
         const nextIndex = (state.currentFactIndex + 1) % state.facts.length;
         set({ 
           currentFactIndex: nextIndex,
@@ -104,15 +107,22 @@ export const useGameStore = create<GameStore>()(
 
       resetGame: () => {
         const state = get();
-        // Get fresh facts for the current topic and reshuffle them
-        const freshFacts = getFactsForTopic(state.currentTopic!);
-        const shuffledFacts = [...freshFacts].sort(() => Math.random() - 0.5);
-        set({
-          ...initialState,
-          currentTopic: state.currentTopic,
-          facts: shuffledFacts,
-          currentFactIndex: 0, // Explicitly reset to first question
-        });
+        if (state.currentTopic) {
+          const freshFacts = getFactsForTopic(state.currentTopic);
+          const shuffledFacts = [...freshFacts].sort(() => Math.random() - 0.5);
+          set({
+            currentTopic: state.currentTopic,
+            facts: shuffledFacts,
+            currentFactIndex: 0,
+            score: 0,
+            totalQuestions: 0,
+            timeRemaining: 60,
+            gameActive: false,
+            showFeedback: false,
+            lastAnswerCorrect: null,
+            answeredQuestions: [],
+          });
+        }
       },
 
       hideFeedback: () => {

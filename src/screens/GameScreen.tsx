@@ -47,11 +47,16 @@ export function GameScreen({ navigation }: GameScreenProps) {
   const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
-    if (!gameActive) {
+    // Ensure game starts when component mounts or facts are loaded
+    if (facts.length > 0 && !gameActive) {
       startGame();
-      resetCard(); // Reset card position when game starts
     }
-  }, []);
+    resetCard();
+  }, [facts]);
+
+  useEffect(() => {
+    resetCard();
+  }, [currentFactIndex]);
 
   useEffect(() => {
     if (gameActive && timeRemaining > 0) {
@@ -73,11 +78,14 @@ export function GameScreen({ navigation }: GameScreenProps) {
       const timer = setTimeout(() => {
         hideFeedback();
         nextFact();
-        resetCard();
+        // Reset card after a short delay to ensure smooth transition
+        setTimeout(() => {
+          resetCard();
+        }, 100);
       }, 600);
       return () => clearTimeout(timer);
     }
-  }, [showFeedback, nextFact, hideFeedback]);
+  }, [showFeedback]);
 
   const resetCard = () => {
     translateX.value = withSpring(0);
@@ -160,7 +168,7 @@ export function GameScreen({ navigation }: GameScreenProps) {
     }]
   }));
 
-  if (!facts.length || currentFactIndex >= facts.length) {
+  if (!facts.length) {
     return (
       <View className="flex-1 items-center justify-center bg-slate-900">
         <View className="w-20 h-20 bg-slate-800 rounded-full items-center justify-center shadow-xl mb-6">
@@ -172,6 +180,15 @@ export function GameScreen({ navigation }: GameScreenProps) {
   }
 
   const currentFact = facts[currentFactIndex];
+  
+  // If no current fact, show loading or reset
+  if (!currentFact) {
+    return (
+      <View className="flex-1 items-center justify-center bg-slate-900">
+        <Text className="text-xl text-slate-300">Loading next fact...</Text>
+      </View>
+    );
+  }
   const progress = (currentFactIndex / facts.length) * 100;
 
   return (

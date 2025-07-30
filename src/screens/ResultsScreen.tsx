@@ -101,8 +101,12 @@ export function ResultsScreen({ navigation }: ResultsScreenProps) {
   const performance = getPerformanceMessage();
 
   const handlePlayAgain = () => {
+    // Reset game state and navigate back to topic selection for a fresh start
     resetGame();
-    navigation.navigate('Game');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'TopicSelection' }],
+    });
   };
 
   // Animated styles
@@ -226,15 +230,15 @@ export function ResultsScreen({ navigation }: ResultsScreenProps) {
             primary={true}
           />
 
-          {/* Review Answers Button */}
-          <AnimatedButton
+          {/* Review Answers Button - Currently disabled */}
+          {/*<AnimatedButton
             onPress={() => navigation.navigate('ReviewAnswers')}
             gradient={['#F59E0B', '#D97706']}
             shadowColor="#F59E0B"
             icon="list-outline"
             text="REVIEW ANSWERS"
             primary={false}
-          />
+          />*/}
 
           {/* New Topic Button */}
           <AnimatedButton
