@@ -73,7 +73,7 @@ export function GameScreen({ navigation }: GameScreenProps) {
         hideFeedback();
         nextFact();
         resetCard();
-      }, 1200);
+      }, 600);
       return () => clearTimeout(timer);
     }
   }, [showFeedback]);
@@ -196,20 +196,20 @@ export function GameScreen({ navigation }: GameScreenProps) {
             />
           </View>
         </View>
-        
-        {/* CHANGED: Timer with color coding */}
-        <View className={`px-4 py-2 rounded-full ${
-          timeRemaining > 10 ? 'bg-green-500' : 
-          timeRemaining > 5 ? 'bg-yellow-500' : 'bg-red-500'
-        }`}>
-          <Text className="text-white font-bold text-lg">
-            {timeRemaining}
-          </Text>
-        </View>
       </View>
 
       {/* NEW: Large centered score */}
       <View className="items-center py-8">
+        {/* Timer above score */}
+        <View className={`px-6 py-3 rounded-full mb-4 ${
+          timeRemaining > 10 ? 'bg-green-500' : 
+          timeRemaining > 5 ? 'bg-yellow-500' : 'bg-red-500'
+        }`}>
+          <Text className="text-white font-bold text-2xl">
+            {timeRemaining}
+          </Text>
+        </View>
+        
         <Text className="text-4xl font-bold text-indigo-400">
           {score}
         </Text>
@@ -221,21 +221,6 @@ export function GameScreen({ navigation }: GameScreenProps) {
       {/* CHANGED: Completely centered game area */}
       <View className="flex-1 items-center justify-center px-6">
         
-        {/* NEW: Animated swipe indicators */}
-        <Animated.View 
-          style={[leftIndicatorStyle]}
-          className="absolute left-12 w-24 h-24 bg-red-500 rounded-full items-center justify-center shadow-2xl"
-        >
-          <Ionicons name="close" size={40} color="white" />
-        </Animated.View>
-        
-        <Animated.View 
-          style={[rightIndicatorStyle]}
-          className="absolute right-12 w-24 h-24 bg-green-500 rounded-full items-center justify-center shadow-2xl"
-        >
-          <Ionicons name="checkmark" size={40} color="white" />
-        </Animated.View>
-
         {/* CHANGED: Much larger, more prominent card */}
         <PanGestureHandler onGestureEvent={gestureHandler}>
           <Animated.View
