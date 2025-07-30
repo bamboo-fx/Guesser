@@ -217,55 +217,44 @@ function TopicCard({
 
   return (
     <AnimatedPressable
-      style={[cardStyle]}
+      style={[
+        cardStyle,
+        glowStyle,
+        {
+          shadowColor: topic.shadowColor,
+          shadowOffset: { width: 0, height: 8 },
+          shadowRadius: 25,
+          borderColor: topic.gradient[0],
+        }
+      ]}
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      className="w-40 h-44 mb-4"
+      className="w-40 h-44 mb-4 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl items-center justify-center border-2"
     >
-      {/* Gradient border */}
+      {/* Icon container with gradient */}
       <View 
-        className="w-full h-full rounded-3xl p-1"
+        className="w-16 h-16 rounded-2xl items-center justify-center mb-3"
+        style={{
+          backgroundColor: topic.gradient[0] + '40'
+        }}
+      >
+        <Text style={{ fontSize: 32, color: topic.gradient[0] }}>
+          {topic.emoji}
+        </Text>
+      </View>
+      
+      <Text className="text-white font-bold text-center text-base px-2 leading-5">
+        {topic.name}
+      </Text>
+      
+      {/* Subtle bottom accent */}
+      <View 
+        className="absolute bottom-0 left-0 right-0 h-1 rounded-b-3xl"
         style={{
           backgroundColor: topic.gradient[0]
         }}
-      >
-        <Animated.View 
-          style={[
-            glowStyle,
-            {
-              shadowColor: topic.shadowColor,
-              shadowOffset: { width: 0, height: 8 },
-              shadowRadius: 25,
-            }
-          ]}
-          className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl items-center justify-center border border-white/10"
-        >
-          {/* Icon container with gradient */}
-          <View 
-            className="w-16 h-16 rounded-2xl items-center justify-center mb-3"
-            style={{
-              backgroundColor: topic.gradient[0] + '40'
-            }}
-          >
-            <Text style={{ fontSize: 32, color: topic.gradient[0] }}>
-              {topic.emoji}
-            </Text>
-          </View>
-          
-          <Text className="text-white font-bold text-center text-base px-2 leading-5">
-            {topic.name}
-          </Text>
-          
-          {/* Subtle bottom accent */}
-          <View 
-            className="absolute bottom-0 left-0 right-0 h-1 rounded-b-3xl"
-            style={{
-              backgroundColor: topic.gradient[0]
-            }}
-          />
-        </Animated.View>
-      </View>
+      />
     </AnimatedPressable>
   );
 }

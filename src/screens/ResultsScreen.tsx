@@ -240,15 +240,7 @@ export function ResultsScreen({ navigation }: ResultsScreenProps) {
             primary={false}
           />
 
-          {/* New Topic Button */}
-          <AnimatedButton
-            onPress={() => navigation.navigate('TopicSelection')}
-            gradient={['#6366F1', '#4F46E5']}
-            shadowColor="#6366F1"
-            icon="grid-outline"
-            text="NEW TOPIC"
-            primary={false}
-          />
+
         </Animated.View>
       </Animated.View>
     </ScrollView>
