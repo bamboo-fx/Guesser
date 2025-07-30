@@ -102,7 +102,7 @@ export function ResultsScreen({ navigation }: ResultsScreenProps) {
 
   const handlePlayAgain = () => {
     resetGame();
-    navigation.navigate('TopicSelection');
+    navigation.navigate('Game');
   };
 
   // Animated styles
