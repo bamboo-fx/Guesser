@@ -126,7 +126,7 @@ export function TopicSelectionScreen({ navigation }: TopicSelectionScreenProps) 
       {/* Animated header */}
       <Animated.View style={[titleStyle]} className="mt-16 mb-12">
                  <Text className="text-5xl font-black text-center text-white mb-4 shadow-2xl mt-4">
-           Fact or Fiction
+           Guesser
          </Text>
         
                           <Text className="text-lg text-center text-slate-300 font-medium mt-6">

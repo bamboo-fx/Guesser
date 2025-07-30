@@ -76,7 +76,7 @@ export function GameScreen({ navigation }: GameScreenProps) {
       }, 600);
       return () => clearTimeout(timer);
     }
-  }, [showFeedback]);
+  }, [showFeedback, nextFact, hideFeedback]);
 
   const resetCard = () => {
     translateX.value = withSpring(0);
@@ -188,13 +188,6 @@ export function GameScreen({ navigation }: GameScreenProps) {
           <Text className="text-lg font-bold text-white uppercase tracking-wider">
             {currentTopic}
           </Text>
-          {/* NEW: Progress bar */}
-          <View className="w-32 h-1 bg-slate-700 rounded-full mt-2 overflow-hidden">
-            <View 
-              className="h-full bg-indigo-500 rounded-full"
-              style={{ width: `${progress}%` }}
-            />
-          </View>
         </View>
       </View>
 
