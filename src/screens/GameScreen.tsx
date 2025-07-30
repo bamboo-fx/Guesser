@@ -9,11 +9,13 @@ import Animated, {
   runOnJS,
   withSpring,
   withTiming,
+  interpolate,
+  Extrapolate,
 } from 'react-native-reanimated';
 import { useGameStore } from '../state/gameStore';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
 
 interface GameScreenProps {
   navigation: any;
@@ -41,7 +43,8 @@ export function GameScreen({ navigation }: GameScreenProps) {
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(1);
   const scale = useSharedValue(1);
-  const timerRef = useRef<NodeJS.Timeout>();
+  const rotation = useSharedValue(0);
+  const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
     if (!gameActive) {
@@ -70,7 +73,7 @@ export function GameScreen({ navigation }: GameScreenProps) {
         hideFeedback();
         nextFact();
         resetCard();
-      }, 1000);
+      }, 1200);
       return () => clearTimeout(timer);
     }
   }, [showFeedback]);
@@ -79,6 +82,7 @@ export function GameScreen({ navigation }: GameScreenProps) {
     translateX.value = withSpring(0);
     opacity.value = withTiming(1);
     scale.value = withSpring(1);
+    rotation.value = withSpring(0);
   };
 
   const handleAnswer = (answer: boolean) => {
@@ -91,19 +95,22 @@ export function GameScreen({ navigation }: GameScreenProps) {
     },
     onActive: (event) => {
       translateX.value = event.translationX;
-      opacity.value = 1 - Math.abs(event.translationX) / SCREEN_WIDTH;
+      rotation.value = event.translationX * 0.05; // Added rotation
+      opacity.value = 1 - Math.abs(event.translationX) / (SCREEN_WIDTH * 0.8);
     },
     onEnd: (event) => {
       scale.value = withSpring(1);
       
       if (Math.abs(event.translationX) > SWIPE_THRESHOLD) {
-        const answer = event.translationX > 0; // Right = true, Left = false
+        const answer = event.translationX > 0;
         translateX.value = withTiming(event.translationX > 0 ? SCREEN_WIDTH : -SCREEN_WIDTH);
         opacity.value = withTiming(0);
+        rotation.value = withTiming(event.translationX > 0 ? 30 : -30); // Added rotation
         runOnJS(handleAnswer)(answer);
       } else {
         translateX.value = withSpring(0);
         opacity.value = withTiming(1);
+        rotation.value = withSpring(0);
       }
     },
   });
@@ -111,94 +118,174 @@ export function GameScreen({ navigation }: GameScreenProps) {
   const cardStyle = useAnimatedStyle(() => ({
     transform: [
       { translateX: translateX.value },
+      { rotate: `${rotation.value}deg` }, // Added rotation
       { scale: scale.value },
     ],
     opacity: opacity.value,
   }));
 
+  // NEW: Animated swipe indicators
+  const leftIndicatorStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      translateX.value,
+      [-SWIPE_THRESHOLD, 0],
+      [1, 0],
+      Extrapolate.CLAMP
+    ),
+    transform: [{
+      scale: interpolate(
+        translateX.value,
+        [-SWIPE_THRESHOLD, 0],
+        [1.2, 0.8],
+        Extrapolate.CLAMP
+      )
+    }]
+  }));
+
+  const rightIndicatorStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      translateX.value,
+      [0, SWIPE_THRESHOLD],
+      [0, 1],
+      Extrapolate.CLAMP
+    ),
+    transform: [{
+      scale: interpolate(
+        translateX.value,
+        [0, SWIPE_THRESHOLD],
+        [0.8, 1.2],
+        Extrapolate.CLAMP
+      )
+    }]
+  }));
+
   if (!facts.length || currentFactIndex >= facts.length) {
     return (
-      <View className="flex-1 items-center justify-center bg-gray-50">
-        <Text className="text-xl text-gray-600">Loading facts...</Text>
+      <View className="flex-1 items-center justify-center bg-slate-900">
+        <View className="w-20 h-20 bg-slate-800 rounded-full items-center justify-center shadow-xl mb-6">
+          <Ionicons name="hourglass-outline" size={40} color="#6366F1" />
+        </View>
+        <Text className="text-xl text-slate-300 font-semibold">Loading facts...</Text>
       </View>
     );
   }
 
   const currentFact = facts[currentFactIndex];
+  const progress = (currentFactIndex / facts.length) * 100;
 
   return (
-    <View className="flex-1 bg-gray-50">
-      {/* Header */}
-      <View className="flex-row justify-between items-center p-4 bg-white shadow-sm">
-        <Pressable onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#374151" />
+    <View className="flex-1 bg-slate-900">
+      {/* CHANGED: Dark header with better styling */}
+      <View className="flex-row justify-between items-center px-6 pt-14 pb-6 bg-slate-800/50">
+        <Pressable 
+          onPress={() => navigation.goBack()}
+          className="w-12 h-12 items-center justify-center bg-slate-700 rounded-full"
+        >
+          <Ionicons name="close" size={20} color="#E2E8F0" />
         </Pressable>
-        <Text className="text-lg font-semibold text-gray-800 capitalize">
-          {currentTopic}
-        </Text>
-        <View className="flex-row items-center">
-          <Ionicons name="time-outline" size={20} color="#6B7280" />
-          <Text className="ml-1 text-lg font-bold text-gray-700">
-            {timeRemaining}s
+        
+        <View className="items-center">
+          <Text className="text-lg font-bold text-white uppercase tracking-wider">
+            {currentTopic}
+          </Text>
+          {/* NEW: Progress bar */}
+          <View className="w-32 h-1 bg-slate-700 rounded-full mt-2 overflow-hidden">
+            <View 
+              className="h-full bg-indigo-500 rounded-full"
+              style={{ width: `${progress}%` }}
+            />
+          </View>
+        </View>
+        
+        {/* CHANGED: Timer with color coding */}
+        <View className={`px-4 py-2 rounded-full ${
+          timeRemaining > 10 ? 'bg-green-500' : 
+          timeRemaining > 5 ? 'bg-yellow-500' : 'bg-red-500'
+        }`}>
+          <Text className="text-white font-bold text-lg">
+            {timeRemaining}
           </Text>
         </View>
       </View>
 
-      {/* Score */}
-      <View className="px-4 py-2">
-        <Text className="text-center text-gray-600">
-          Score: {score}/{totalQuestions}
+      {/* NEW: Large centered score */}
+      <View className="items-center py-8">
+        <Text className="text-4xl font-bold text-indigo-400">
+          {score}
+        </Text>
+        <Text className="text-slate-400 text-sm font-medium tracking-wider uppercase mt-1">
+          Correct Answers
         </Text>
       </View>
 
-      {/* Game Area */}
-      <View className="flex-1 items-center justify-center px-4">
+      {/* CHANGED: Completely centered game area */}
+      <View className="flex-1 items-center justify-center px-6">
+        
+        {/* NEW: Animated swipe indicators */}
+        <Animated.View 
+          style={[leftIndicatorStyle]}
+          className="absolute left-12 w-24 h-24 bg-red-500 rounded-full items-center justify-center shadow-2xl"
+        >
+          <Ionicons name="close" size={40} color="white" />
+        </Animated.View>
+        
+        <Animated.View 
+          style={[rightIndicatorStyle]}
+          className="absolute right-12 w-24 h-24 bg-green-500 rounded-full items-center justify-center shadow-2xl"
+        >
+          <Ionicons name="checkmark" size={40} color="white" />
+        </Animated.View>
+
+        {/* CHANGED: Much larger, more prominent card */}
         <PanGestureHandler onGestureEvent={gestureHandler}>
           <Animated.View
             style={[cardStyle]}
-            className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8 border border-gray-100"
+            className="w-full bg-slate-800 rounded-3xl shadow-2xl border border-slate-700"
           >
-            <Text className="text-2xl font-semibold text-gray-800 text-center leading-8">
-              {currentFact.statement}
-            </Text>
+            <View className="p-10 min-h-[350px] justify-center">
+              <Text className="text-3xl font-bold text-white text-center leading-relaxed">
+                {currentFact.statement}
+              </Text>
+            </View>
+            {/* NEW: Bottom accent line */}
+            <View className="h-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-b-3xl" />
           </Animated.View>
         </PanGestureHandler>
+      </View>
 
-        {/* Swipe Instructions */}
-        <View className="flex-row justify-between w-full max-w-sm mt-8 px-4">
-          <View className="items-center">
-            <View className="w-12 h-12 bg-red-500 rounded-full items-center justify-center mb-2">
-              <Ionicons name="close" size={24} color="white" />
-            </View>
-            <Text className="text-red-500 font-semibold">FALSE</Text>
-            <Text className="text-gray-500 text-sm">Swipe Left</Text>
+      {/* CHANGED: Cleaner bottom instructions */}
+      <View className="flex-row justify-between px-16 pb-12">
+        <View className="items-center">
+          <View className="w-16 h-16 bg-slate-800 border-2 border-red-500 rounded-full items-center justify-center mb-3">
+            <Ionicons name="arrow-back" size={24} color="#EF4444" />
           </View>
-          <View className="items-center">
-            <View className="w-12 h-12 bg-green-500 rounded-full items-center justify-center mb-2">
-              <Ionicons name="checkmark" size={24} color="white" />
-            </View>
-            <Text className="text-green-500 font-semibold">TRUE</Text>
-            <Text className="text-gray-500 text-sm">Swipe Right</Text>
+          <Text className="text-red-500 font-bold text-sm">FALSE</Text>
+        </View>
+        
+        <View className="items-center">
+          <View className="w-16 h-16 bg-slate-800 border-2 border-green-500 rounded-full items-center justify-center mb-3">
+            <Ionicons name="arrow-forward" size={24} color="#10B981" />
           </View>
+          <Text className="text-green-500 font-bold text-sm">TRUE</Text>
         </View>
       </View>
 
-      {/* Feedback Overlay */}
+      {/* CHANGED: More dramatic feedback overlay */}
       {showFeedback && (
-        <View className="absolute inset-0 items-center justify-center bg-black/50">
-          <View className={`w-32 h-32 rounded-full items-center justify-center ${
+        <View className="absolute inset-0 items-center justify-center bg-black/80">
+          <View className={`w-44 h-44 rounded-full items-center justify-center shadow-2xl ${
             lastAnswerCorrect ? 'bg-green-500' : 'bg-red-500'
           }`}>
             <Ionicons 
               name={lastAnswerCorrect ? 'checkmark' : 'close'} 
-              size={64} 
+              size={80} 
               color="white" 
             />
           </View>
-          <Text className={`text-2xl font-bold mt-4 ${
+          <Text className={`text-4xl font-bold mt-8 ${
             lastAnswerCorrect ? 'text-green-500' : 'text-red-500'
           }`}>
-            {lastAnswerCorrect ? 'Correct!' : 'Wrong!'}
+            {lastAnswerCorrect ? 'CORRECT!' : 'WRONG!'}
           </Text>
         </View>
       )}
