@@ -1,17 +1,45 @@
 {
   "expo": {
-    "name": "vibecode",
-    "slug": "vibecode",
-    "scheme": "vibecode",
+    "name": "Guesser",
+    "slug": "guesser",
+    "scheme": "guesser",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2E9ED8"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.kevinx.guesser",
+      "buildNumber": "1",
+      "infoPlist": {
+        "CFBundleDisplayName": "Guesser",
+        "CFBundleName": "Guesser",
+        "CFBundleShortVersionString": "1.0.0",
+        "CFBundleVersion": "1",
+        "UIBackgroundModes": [],
+        "UIRequiresFullScreen": false,
+        "UIStatusBarStyle": "default",
+        "UISupportedInterfaceOrientations": [
+          "UIInterfaceOrientationPortrait"
+        ],
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.kevinx.guesser",
+      "versionCode": 1
+    },
+    "extra": {
+      "eas": {
+        "projectId": "39e29141-4d81-4d03-93c8-3760ef48b3ad"
+      }
     }
   }
 }

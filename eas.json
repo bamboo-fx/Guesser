@@ -1,0 +1,43 @@
+{
+  "cli": {
+    "version": ">= 16.17.3",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "resourceClass": "m-medium"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "resourceClass": "m-medium"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "ios": {
+        "resourceClass": "m-medium"
+      }
+    }
+  },
+  "submit": {
+    "preview": {
+      "ios": {
+        "appleId": "kexia@g.hmc.edu",
+        "ascAppId": "6749287090",
+        "appleTeamId": "RLNS2JBXHQ"
+      }
+    },
+    "production": {
+      "ios": {
+        "appleId": "kexia@g.hmc.edu",
+        "ascAppId": "6749287090",
+        "appleTeamId": "RLNS2JBXHQ"
+      }
+    }
+  }
+}
