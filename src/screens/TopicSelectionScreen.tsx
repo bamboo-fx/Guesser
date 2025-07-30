@@ -247,14 +247,6 @@ function TopicCard({
       <Text className="text-white font-bold text-center text-base px-2 leading-5">
         {topic.name}
       </Text>
-      
-      {/* Subtle bottom accent */}
-      <View 
-        className="absolute bottom-0 left-0 right-0 h-1 rounded-b-3xl"
-        style={{
-          backgroundColor: topic.gradient[0]
-        }}
-      />
     </AnimatedPressable>
   );
 }
