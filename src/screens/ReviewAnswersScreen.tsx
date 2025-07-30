@@ -95,7 +95,7 @@ export function ReviewAnswersScreen({ navigation }: ReviewAnswersScreenProps) {
   return (
     <View className="flex-1 bg-slate-900">
       {/* Header */}
-      <Animated.View style={[headerStyle]} className="px-6 pt-14 pb-6 bg-slate-800/50">
+      <Animated.View style={[headerStyle]} className="px-6 pt-16 pb-6 bg-slate-800/50">
         <View className="flex-row items-center justify-between">
           <Pressable 
             onPress={() => navigation.goBack()}
