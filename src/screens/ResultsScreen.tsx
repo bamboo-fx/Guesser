@@ -230,15 +230,15 @@ export function ResultsScreen({ navigation }: ResultsScreenProps) {
             primary={true}
           />
 
-          {/* Review Answers Button - Currently disabled */}
-          {/*<AnimatedButton
+          {/* Review Answers Button */}
+          <AnimatedButton
             onPress={() => navigation.navigate('ReviewAnswers')}
             gradient={['#F59E0B', '#D97706']}
             shadowColor="#F59E0B"
             icon="list-outline"
             text="REVIEW ANSWERS"
             primary={false}
-          />*/}
+          />
 
           {/* New Topic Button */}
           <AnimatedButton
