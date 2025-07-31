@@ -261,10 +261,10 @@ export function GameScreen({ navigation }: GameScreenProps) {
           }}
           className="items-center"
         >
-          <View className="w-16 h-16 bg-slate-800 border-2 border-red-500 rounded-full items-center justify-center mb-3">
-            <Ionicons name="arrow-back" size={24} color="#EF4444" />
+          <View className="w-14 h-14 bg-slate-800 border-2 border-red-500 rounded-full items-center justify-center mb-3">
+            <Ionicons name="arrow-back" size={20} color="#EF4444" />
           </View>
-          <Text className="text-red-500 font-bold text-sm">FALSE</Text>
+          <Text className="text-red-500 font-bold text-xs">FALSE</Text>
         </Pressable>
         
         <Pressable 
@@ -277,10 +277,10 @@ export function GameScreen({ navigation }: GameScreenProps) {
           }}
           className="items-center"
         >
-          <View className="w-16 h-16 bg-slate-800 border-2 border-green-500 rounded-full items-center justify-center mb-3">
-            <Ionicons name="arrow-forward" size={24} color="#10B981" />
+          <View className="w-14 h-14 bg-slate-800 border-2 border-green-500 rounded-full items-center justify-center mb-3">
+            <Ionicons name="arrow-forward" size={20} color="#10B981" />
           </View>
-          <Text className="text-green-500 font-bold text-sm">TRUE</Text>
+          <Text className="text-green-500 font-bold text-xs">TRUE</Text>
         </Pressable>
       </View>
 
